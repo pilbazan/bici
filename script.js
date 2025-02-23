@@ -3,20 +3,46 @@ fetch('datos.json')
   .then(response => response.json())
   .then(data => {
     // Inicializar el mapa
-    const map = L.map('map').setView([41.3937, 2.1595], 15); // Centro en Barcelona (cambia según tu ubicación inicial)
+    const map = L.map('map').setView([41.3937, 2.1595], 15); // Centro inicial en Barcelona
 
     // Añadir capa de mapa (usando OpenStreetMap)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    let userMarker = null; // Marcador de la ubicación del usuario
-    let centerMarker = null; // Marcador del centro del mapa
-    let puntosMarkers = []; // Array para almacenar los marcadores de los puntos
+    // Icono personalizado para "Estás aquí"
+    const userIcon = L.icon({
+      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-red.png', // Ícono rojo
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34]
+    });
 
-    // Función para añadir un marcador rojo en una posición
-    function addRedMarker(lat, lng) {
-      return L.marker([lat, lng], { icon: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png', iconSize: [25, 41], iconAnchor: [12, 41] }) });
+    // Función para mostrar puntos cercanos
+    function mostrarPuntosCercanos(lat, lng) {
+      // Limpiar marcadores anteriores
+      map.eachLayer(layer => {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+
+      // Filtrar puntos cercanos (por ejemplo, 400 metros)
+      const puntosCercanos = data.features.filter(feature => {
+        const [lngPunto, latPunto] = feature.geometry.coordinates;
+        const distancia = calcularDistancia(lat, lng, latPunto, lngPunto);
+        return distancia <= 400; // Mostrar puntos dentro de 400 metros
+      });
+
+      // Mostrar puntos en el mapa
+      puntosCercanos.forEach(feature => {
+        const [lngPunto, latPunto] = feature.geometry.coordinates;
+        const propiedades = feature.properties;
+
+        // Añadir marcador al mapa
+        L.marker([latPunto, lngPunto]).addTo(map)
+          .bindPopup(`${propiedades.NOM_CARRER} ${propiedades.NUM_CARRER}`);
+      });
     }
 
     // Obtener la ubicación del usuario
@@ -25,62 +51,35 @@ fetch('datos.json')
         const userLat = position.coords.latitude;
         const userLng = position.coords.longitude;
 
-        // Añadir marcador de la ubicación del usuario
-        userMarker = addRedMarker(userLat, userLng).addTo(map)
-          .bindPopup('¡Estás aquí!')
-          .openPopup();
-
         // Centrar el mapa en la ubicación del usuario
         map.setView([userLat, userLng], 15);
 
-        // Añadir marcador rojo en el centro del mapa
-        centerMarker = addRedMarker(userLat, userLng).addTo(map);
+        // Añadir marcador de la ubicación del usuario
+        // L.marker([userLat, userLng], { icon: userIcon }).addTo(map)
+        L.marker([userLat, userLng]).addTo(map)
+          .bindPopup('¡Estás aquí!')
+          .openPopup();
+
+        // Mostrar puntos cercanos
+        mostrarPuntosCercanos(userLat, userLng);
+
+        // Botón "Estoy aquí"
+        document.getElementById('estoy-aqui').addEventListener('click', () => {
+          map.setView([userLat, userLng], 15);
+          mostrarPuntosCercanos(userLat, userLng);
+        });
+
+        // Botón "Seleccionar aquí"
+        document.getElementById('seleccionar-aqui').addEventListener('click', () => {
+          const center = map.getCenter();
+          mostrarPuntosCercanos(center.lat, center.lng);
+        });
       },
       (error) => {
         console.error('Error al obtener la ubicación:', error);
+        alert('No se pudo obtener tu ubicación. Asegúrate de permitir el acceso a la ubicación.');
       }
     );
-
-    // Evento para el botón 'Estoy aquí'
-    document.getElementById('estoy-aqui').addEventListener('click', () => {
-      if (userMarker) {
-        const userLatLng = userMarker.getLatLng();
-        map.setView(userLatLng, 15);
-        if (centerMarker) {
-          centerMarker.setLatLng(userLatLng);
-        }
-      }
-    });
-
-    // Evento para el botón 'Seleccionar aquí'
-    document.getElementById('seleccionar-aqui').addEventListener('click', () => {
-      const centerLatLng = map.getCenter();
-      if (centerMarker) {
-        centerMarker.setLatLng(centerLatLng);
-      }
-
-      // Filtrar puntos cercanos (por ejemplo, 400 metros)
-      const puntosCercanos = data.features.filter(feature => {
-        const [lng, lat] = feature.geometry.coordinates; // Extraer coordenadas
-        const distancia = calcularDistancia(centerLatLng.lat, centerLatLng.lng, lat, lng);
-        return distancia <= 400; // Mostrar puntos dentro de 400 metros
-      });
-
-      // Limpiar marcadores anteriores
-      puntosMarkers.forEach(marker => map.removeLayer(marker));
-      puntosMarkers = []; // Reiniciar el array de marcadores
-
-      // Mostrar solo los puntos cercanos en el mapa
-      puntosCercanos.forEach(feature => {
-        const [lng, lat] = feature.geometry.coordinates; // Extraer coordenadas
-        const propiedades = feature.properties; // Extraer propiedades
-
-        // Añadir marcador al mapa
-        const marker = L.marker([lat, lng]).addTo(map)
-          .bindPopup(`${propiedades.NOM_CARRER} ${propiedades.NUM_CARRER}`);
-        puntosMarkers.push(marker); // Guardar el marcador en el array
-      });
-    });
   })
   .catch(error => console.error('Error al cargar los datos:', error));
 
