@@ -55,8 +55,10 @@ fetch('datos.json')
         // Centrar el mapa en la ubicación del usuario
         map.setView([userLat, userLng], 15);
 
+         // Añadir marcador de la ubicación del usuario
+        L.marker([userLat, userLng]).addTo(map)
         // Añadir marcador de la ubicación del usuario
-        L.marker([userLat, userLng], { icon: userIcon }).addTo(map)
+        //L.marker([userLat, userLng], { icon: userIcon }).addTo(map)
           .bindPopup('¡Estás aquí!')
           .openPopup();
 
