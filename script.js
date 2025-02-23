@@ -57,10 +57,11 @@ fetch('datos.json')
 
          // Añadir marcador de la ubicación del usuario
         L.marker([userLat, userLng]).addTo(map)
-        // Añadir marcador de la ubicación del usuario
-        //L.marker([userLat, userLng], { icon: userIcon }).addTo(map)
           .bindPopup('¡Estás aquí!')
           .openPopup();
+        // Añadir marcador de la ubicación del usuario
+        //L.marker([userLat, userLng], { icon: userIcon }).addTo(map)
+
 
         // Mostrar puntos cercanos
         mostrarPuntosCercanos(userLat, userLng);
