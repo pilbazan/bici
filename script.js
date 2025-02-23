@@ -11,20 +11,12 @@ fetch('datos.json')
     }).addTo(map);
 
     // Icono personalizado para "Estás aquí"
-    //const userIcon = L.icon({
-    //  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png', // Ícono rojo desde GitHub
-    //  iconSize: [25, 41],
-    //  iconAnchor: [12, 41],
-    //  popupAnchor: [1, -34]
-    // });
-
-    // Icono personalizado para "Estás aquí"
-const userIcon = L.icon({
-  iconUrl: 'marker-icon-red.png', // Ruta local al ícono rojo
-  iconSize: [25, 41], // Tamaño del ícono
-  iconAnchor: [12, 41], // Punto de anclaje del ícono
-  popupAnchor: [1, -34] // Punto de anclaje del popup
-});
+    const userIcon = L.icon({
+      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-red.png', // Ícono rojo
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34]
+    });
 
     // Función para mostrar puntos cercanos
     function mostrarPuntosCercanos(lat, lng) {
