@@ -5,12 +5,12 @@ body {
 }
 
 #map {
-  height: 400px;
+  height: 500px; /* Aumenté la altura para mejor visualización */
   width: 100%;
 }
 
 #botones {
-  margin-top: 20px;
+  margin-top: 10px;
   text-align: center;
 }
 
