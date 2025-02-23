@@ -12,7 +12,7 @@ fetch('datos.json')
 
     // Icono personalizado para "Estás aquí"
     const userIcon = L.icon({
-      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-red.png', // Ícono rojo
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png', // Ícono rojo
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34]
