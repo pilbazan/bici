@@ -12,7 +12,7 @@ fetch('datos.json')
 
     // Icono personalizado para "Estás aquí"
     const userIcon = L.icon({
-      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-red.png', // Ícono rojo
+      iconUrl: 'marker-icon-red.png', // Ícono rojo
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34]
@@ -26,6 +26,13 @@ fetch('datos.json')
           map.removeLayer(layer);
         }
       });
+
+        // Añadir marcador de la ubicación del usuario
+        // L.marker([lat, lng], {icon: userIcon}).addTo(map)
+        L.marker([lat, lng], {icon: userIcon}).addTo(map)
+          .bindPopup('¡Estás aquí!')
+          .openPopup();
+
 
       // Filtrar puntos cercanos (por ejemplo, 400 metros)
       const puntosCercanos = data.features.filter(feature => {
@@ -41,12 +48,17 @@ fetch('datos.json')
 
         // Añadir marcador al mapa
         L.marker([latPunto, lngPunto]).addTo(map)
-          .bindPopup(`${propiedades.NOM_CARRER} ${propiedades.NUM_CARRER}`);
+          .bindPopup(`${propiedades.NOM_CARRER} ${propiedades.NUM_CARRER} - Plazas: ${propiedades.NUM_PLACES}`);
       });
+
+
+
+
     }
 
-    // Obtener la ubicación del usuario
-    navigator.geolocation.getCurrentPosition(
+
+        // Obtener la ubicación del usuario
+       navigator.geolocation.getCurrentPosition(
       (position) => {
         const userLat = position.coords.latitude;
         const userLng = position.coords.longitude;
@@ -55,10 +67,11 @@ fetch('datos.json')
         map.setView([userLat, userLng], 15);
 
         // Añadir marcador de la ubicación del usuario
-        // L.marker([userLat, userLng], { icon: userIcon }).addTo(map)
-        L.marker([userLat, userLng]).addTo(map)
+        // L.marker([userLat, userLng], {icon: userIcon}).addTo(map)
+        L.marker([userLat, userLng], {icon: userIcon}).addTo(map)
           .bindPopup('¡Estás aquí!')
           .openPopup();
+
 
         // Mostrar puntos cercanos
         mostrarPuntosCercanos(userLat, userLng);
@@ -66,12 +79,20 @@ fetch('datos.json')
         // Botón "Estoy aquí"
         document.getElementById('estoy-aqui').addEventListener('click', () => {
           map.setView([userLat, userLng], 15);
+          L.marker([userLat, userLng], {icon: userIcon}).addTo(map)
+          .bindPopup('¡Estás aquí!')
+          .openPopup();
+
           mostrarPuntosCercanos(userLat, userLng);
         });
 
         // Botón "Centrar aquí"
         document.getElementById('centrar-aqui').addEventListener('click', () => {
           const center = map.getCenter();
+         L.marker([center.lat, center.lng], {icon: userIcon}).addTo(map)
+          .bindPopup('¡Estás aquí!')
+          .openPopup();
+
           mostrarPuntosCercanos(center.lat, center.lng);
         });
       },
