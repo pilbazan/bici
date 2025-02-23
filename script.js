@@ -69,8 +69,8 @@ fetch('datos.json')
           mostrarPuntosCercanos(userLat, userLng);
         });
 
-        // Botón "Seleccionar aquí"
-        document.getElementById('seleccionar-aqui').addEventListener('click', () => {
+        // Botón "Centrar aquí"
+        document.getElementById('centrar-aqui').addEventListener('click', () => {
           const center = map.getCenter();
           mostrarPuntosCercanos(center.lat, center.lng);
         });
