@@ -12,6 +12,7 @@ fetch('datos.json')
 
     let userMarker = null; // Marcador de la ubicación del usuario
     let centerMarker = null; // Marcador del centro del mapa
+    let puntosMarkers = []; // Array para almacenar los marcadores de los puntos
 
     // Función para añadir un marcador rojo en una posición
     function addRedMarker(lat, lng) {
@@ -66,20 +67,18 @@ fetch('datos.json')
       });
 
       // Limpiar marcadores anteriores
-      map.eachLayer(layer => {
-        if (layer instanceof L.Marker && layer !== userMarker && layer !== centerMarker) {
-          map.removeLayer(layer);
-        }
-      });
+      puntosMarkers.forEach(marker => map.removeLayer(marker));
+      puntosMarkers = []; // Reiniciar el array de marcadores
 
-      // Mostrar puntos en el mapa
+      // Mostrar solo los puntos cercanos en el mapa
       puntosCercanos.forEach(feature => {
         const [lng, lat] = feature.geometry.coordinates; // Extraer coordenadas
         const propiedades = feature.properties; // Extraer propiedades
 
         // Añadir marcador al mapa
-        L.marker([lat, lng]).addTo(map)
+        const marker = L.marker([lat, lng]).addTo(map)
           .bindPopup(`${propiedades.NOM_CARRER} ${propiedades.NUM_CARRER}`);
+        puntosMarkers.push(marker); // Guardar el marcador en el array
       });
     });
   })
