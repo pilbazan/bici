@@ -10,6 +10,11 @@ fetch('datos.json')
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
+    // Añadir X al mapa (usando OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z/2}/{x/2}/{y/2}.png', {
+      attribution: 'X'
+    }).addTo(map);
+
     // Icono personalizado para "Estás aquí"
     const userIcon = L.icon({
       iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png', // Ícono rojo
