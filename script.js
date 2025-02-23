@@ -12,7 +12,7 @@ fetch('datos.json')
 
     // Icono personalizado para "Estás aquí"
     const userIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-red.png', // Ícono rojo
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34]
@@ -20,13 +20,12 @@ fetch('datos.json')
 
     // Función para mostrar puntos cercanos
     function mostrarPuntosCercanos(lat, lng) {
-      // Limpiar marcadores y lista anteriores
+      // Limpiar marcadores anteriores
       map.eachLayer(layer => {
         if (layer instanceof L.Marker) {
           map.removeLayer(layer);
         }
       });
-      document.getElementById('lista-puntos').innerHTML = '';
 
       // Filtrar puntos cercanos (por ejemplo, 400 metros)
       const puntosCercanos = data.features.filter(feature => {
@@ -35,8 +34,7 @@ fetch('datos.json')
         return distancia <= 400; // Mostrar puntos dentro de 400 metros
       });
 
-      // Mostrar puntos en el mapa y en la lista
-      const listaPuntos = document.getElementById('lista-puntos');
+      // Mostrar puntos en el mapa
       puntosCercanos.forEach(feature => {
         const [lngPunto, latPunto] = feature.geometry.coordinates;
         const propiedades = feature.properties;
@@ -44,11 +42,6 @@ fetch('datos.json')
         // Añadir marcador al mapa
         L.marker([latPunto, lngPunto]).addTo(map)
           .bindPopup(`${propiedades.NOM_CARRER} ${propiedades.NUM_CARRER}`);
-
-        // Añadir punto a la lista
-        const item = document.createElement('div');
-        item.textContent = `${propiedades.NOM_CARRER} ${propiedades.NUM_CARRER} (${calcularDistancia(lat, lng, latPunto, lngPunto).toFixed(2)} metros)`;
-        listaPuntos.appendChild(item);
       });
     }
 
