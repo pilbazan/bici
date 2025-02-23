@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapa de Anclajes de Bicicletas</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Anclajes de Bicicletas de Barcelona - by PIL</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="map"></div>
-  <div id="botones">
-    <button id="centrar-aqui">Centrar aquí</button>
-    <button id="estoy-aqui">Estoy aquí</button>
-  </div>
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="script.js"></script>
+    <div class="controls">
+        <button id="estoyAqui">Estoy aquí</button>
+        <button id="seleccionarAqui">Seleccionar aquí</button>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
