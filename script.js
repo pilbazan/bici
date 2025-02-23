@@ -76,6 +76,7 @@ fetch('datos.json')
       },
       (error) => {
         console.error('Error al obtener la ubicación:', error);
+        alert('No se pudo obtener tu ubicación. Asegúrate de permitir el acceso a la ubicación.');
       }
     );
   })
